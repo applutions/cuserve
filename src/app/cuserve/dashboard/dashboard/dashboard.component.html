@@ -1,0 +1,98 @@
+<div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 section-base">
+    <div class="container">
+        <div class="section-inner">
+            <h2 class="main-title">Dashboard</h2>
+
+
+            <div class="col-md-12  company-details-base">
+                <div class="col-md-12  company-details-inner">
+                    <h3 class="company-title">IVR List <a *ngIf="ivrlist?.length > 0 " routerLink="ivr/{{userdetail._id}}" class="view-container"><span >View All</span></a></h3>
+
+                    <div class="table-responsive theme-table theme-withtitle">
+                        <table class="table table-striped">
+
+                            <ng-template #nolist>
+                                <p> No List Found </p>
+                            </ng-template>
+
+                            <tbody *ngIf="ivrlist?.length > 0; else nolist">
+                                <tr *ngFor="let list of  (ivrlist | slice:ivrlist.length - 4)">
+                                    <td>{{list.ivrname}}</td>
+                                    <td>{{list.createdAt | date}}</td>
+                                    <td>{{list.createdby.name}}</td>
+                                    <td>
+                                        <p *ngIf="list.status" [ngClass]="{
+                                            'custom-orange':list.status === 'pending',
+                                            'custom-green':list.status === 'approved',
+                                            'custom-red':list.status === 'declined',
+                                            'custom-ash':list.status === 'draft'
+                                          }" class="bold text-lead  capitalize">{{list.status}}</p>
+
+                                    </td>
+                                    <td>
+                                        <p>
+                                            <a class="capitalize" routerLink="editivr/{{list._id}}/{{list.createdby._id}}" [queryParams]="{ previousurl: 'dashboard'}">View</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <ng-container *ngIf="userdetail">
+                <div class="col-md-12  company-details-base">
+                    <div class="col-md-12  company-details-inner">
+                        <h4 class="company-title">Company Details
+                            <a routerLink="account/{{userdetail._id}}" class="edit-iocn"><img src="assets/images/edit-icon.png"> <span>Edit</span></a>
+                        </h4>
+                        <div class="col-md-12   company-details-sections nopadd">
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>COMPANY NAME</h5>
+                                <p>{{userdetail.companyname}}</p>
+                            </div>
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>Email Address</h5>
+                                <p>{{userdetail.companyemail}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12   company-details-sections nopadd">
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>Address</h5>
+                                <p> {{userdetail.companyaddress1}} , {{userdetail.companyaddress2}} <span *ngIf="userdetail.companyaddress2"> ,</span> {{userdetail.companycity}} , {{userdetail.companycountry}}</p>
+                            </div>
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>Phone Number</h5>
+                                <p> {{userdetail.companyphone}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12  company-details-base">
+                    <div class="col-md-12  company-details-inner">
+                        <h4 class="company-title">Account Holder’s Details
+                            <a routerLink="account/{{userdetail._id}}" class="edit-iocn"><img src="assets/images/edit-icon.png"> <span>Edit</span></a>
+                        </h4>
+                        <div class="col-md-12   company-details-sections nopadd">
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>NAME</h5>
+                                <p class="inputmodel">{{userdetail.name}}</p>
+                            </div>
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>Email Address</h5>
+                                <p class="inputmodel">{{userdetail.email}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12   company-details-sections nopadd">
+                            <div class="col-md-5  company-details-section-inner ">
+                                <h5>Phone Number</h5>
+                                <p class="inputmodel">{{userdetail.phone}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

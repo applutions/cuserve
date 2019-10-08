@@ -1,0 +1,154 @@
+<div class="breadcrumb-base col-md-12 col-sm-12 col-lg-12 col-xs-12">
+    <ul class="breadcrumb">
+        <li><a routerLink="/admin/users">User List</a></li>
+        <li><a> {{userId ? register.companyname : 'Create User'}}  </a></li>
+    </ul>
+</div>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="user">
+        <div class="col-md-12  myaccount-base">
+            <h2 class="main-title"> {{userId ? register.companyname : 'Create User'}}</h2>
+            <div class="col-md-12  myaccount-inner">
+                <ul class="nav themetab nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a>My  Account</a></li>
+                    <li *ngIf="edittype" role="presentation"><a routerLink="/admin/users/billing/{{userId}}">Billing </a></li>
+                    <li *ngIf="edittype" role="presentation"><a routerLink="/admin/users/ivr/{{userId}}">IVR  List </a></li>
+                </ul>
+                <div class="tab-content">
+                    <form (ngSubmit)="onSubmitForm(registerForm);" #registerForm="ngForm">
+                        <div class="col-md-12  account-section-input">
+                            <div class="col-md-6    account-section-input-inner">
+                                <h3 class="sub-title">Company Details</h3>
+                                <div class="col-md-12  input-container-base nopadd">
+                                    <div class="col-md-6 input-container ">
+                                        <input type="text" class="input-control" [(ngModel)]="register.companyname" #companyname="ngModel" name="companyname" id="companyname" placeholder="Company Name">
+                                    </div>
+                                    <div class="col-md-6 input-container">
+                                        <input type="email" class="input-control" email [(ngModel)]="register.companyemail" #companyemail="ngModel" name="companyemail" id="companyemail" placeholder="Email Address">
+                                        <div *ngIf="companyemail.touched && companyemail.invalid" class="invalid-feedback">
+                                            <div *ngIf="companyemail.errors.required">Email is required</div>
+                                            <div *ngIf="companyemail.errors.email">Email must be a valid email address</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12  input-container-base nopadd">
+                                    <div class="col-md-6 input-container ">
+                                        <input pattern="^[0-9-+()]*$" type="text" class="input-control" [(ngModel)]="register.companyphone" #companyphone="ngModel" name="companyphone" id="companyphone" placeholder="phone Number">
+                                        <div *ngIf="companyphone.touched && companyphone.invalid" class="invalid-feedback">
+                                            <div *ngIf="companyphone.errors.pattern">Phone Number must be valid</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 input-container">
+                                        <input type="text" class="input-control" [(ngModel)]="register.companyaddress1" #companyaddress1="ngModel" name="companyaddress1" id="companyaddress1" placeholder="Address Line 1">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-12 input-container-base nopadd">
+                                    <!-- <div class="col-md-6  input-container ">
+                                        <input type="text" class="input-control" required [(ngModel)]="register.companyivrnumber" #companyivrnumber="ngModel" name="companyivrnumber" id="companyivrnumber" placeholder="Company IVR Number">
+                                        <div *ngIf="companyivrnumber.touched && companyivrnumber.invalid" class="invalid-feedback">
+                                            <div *ngIf="companyivrnumber.errors.required">Field is required</div>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-6  input-container ">
+                                        <p-dropdown class="input-control" required [options]="categorylist" [(ngModel)]="register.category" #category="ngModel" name="category" id="category"></p-dropdown>
+                                        <div *ngIf="category.touched && category.invalid" class="invalid-feedback">
+                                            <div *ngIf="category.errors.required">Category is required</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-12 input-container-base nopadd">
+                                    <div class="col-md-12  input-container ">
+                                        <label class="formtit"> Company Logo</label>
+                                        <p-fileUpload name="companylogo[]" [url]="companylogoapi" (onUpload)="onUpload($event , 'companylogo')" mode="basic" auto="auto" accept="image/*"></p-fileUpload>
+
+                                        <input type="text" class="hide" hidden [(ngModel)]="register.companylogo" #companylogo="ngModel" name="companylogo" id="companylogo" required>
+                                        <div *ngIf="register.companylogo" class="buttonholder">
+                                            <button type="button" (click)="viewImage(register.companylogo)" class="btn">View</button>
+                                            <button type="button" (click)="removeImage(register.companylogo, 'companylogo' )" class="btn">Remove</button>
+                                        </div>
+                                        <div *ngIf="previewImage" class="imagePreview">
+                                            <h4>Preview</h4>
+                                            <img [src]="previewImage">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12  input-container-base nopadd">
+                                    <div class="col-md-6 input-container ">
+                                        <input type="text" class="input-control" [(ngModel)]="register.companyaddress2" #companyaddress2="ngModel" name="companyaddress2" id="companyaddress2" placeholder="Address Line 2 (Optional)">
+                                    </div>
+                                    <div class="col-md-6 input-container">
+                                        <input type="text" class="input-control" [(ngModel)]="register.companycity" #companycity="ngModel" name="companycity" id="companycity" placeholder="City">
+                                    </div>
+                                </div>
+                                <div class="col-md-12  input-container-base nopadd">
+                                    <div class="col-md-6 input-container ">
+                                        <input type="text" class="input-control" [(ngModel)]="register.companystate" #companystate="ngModel" name="companystate" id="companystate" placeholder="State/province">
+                                    </div>
+                                    <div class="col-md-6 input-container">
+                                        <input type="text" class="input-control" [(ngModel)]="register.companycountry" #companycountry="ngModel" name="companycountry" id="companycountry" placeholder="Country">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6   account-section-input-inner">
+                                <h3 class="sub-title">Account Holder’s Details</h3>
+                                <div class="col-md-12  input-container-base nopadd">
+                                    <div class="col-md-6 input-container ">
+                                        <input required type="text" class="input-c input-control" [(ngModel)]="register.name" #name="ngModel" name="name" id="name" placeholder="Your Name">
+                                        <div *ngIf="name.touched && name.invalid" class="invalid-feedback">
+                                            <div *ngIf="name.errors.required">Name is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 input-container">
+                                        <input required email type="email" class="input-control" [(ngModel)]="register.email" #email="ngModel" name="email" id="email" placeholder="Email Address">
+                                        <div *ngIf="email.touched && email.invalid" class="invalid-feedback">
+                                            <div *ngIf="email.errors.required">Email is required</div>
+                                            <div *ngIf="email.errors.email">Email must be a valid email address</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12  input-container-base nopadd">
+                                    <div class="col-md-6 input-container ">
+                                        <input required pattern="^[0-9-+()]*$" type="text" class="input-control" [(ngModel)]="register.phone" #phone="ngModel" name="phone" id="phone" placeholder="phone Number">
+                                        <div *ngIf="phone.touched && phone.invalid" class="invalid-feedback">
+                                            <div *ngIf="phone.errors.required">Phone Number is required</div>
+                                            <div *ngIf="phone.errors.pattern">Phone Number must be valid</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 input-container ">
+                                        <div class="col-md-12  password-container nopadd">
+                                            <input [attr.type]="passwordvisible ? 'text' : 'password'" class="password-control input-control" [(ngModel)]="register.password" #password="ngModel" name="password" id="password" placeholder="password">
+                                            <button type="button" (click)="passwordvisible = !passwordvisible" class="password-eye">  
+                                                 <i [ngClass]="passwordvisible ? 'mdi-eye' : 'mdi-eye-off'" class="mdi "></i>
+                                                </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12  account-btn-container-base">
+                                <div class="col-md-12  account-btn-container">
+                                    <button type="submit" [disabled]="!registerForm.valid" class="themebtn">SAVE & PROCEED</button>
+                                </div>
+                                <div *ngIf="edittype" class="col-md-12  account-btn-container">
+                                    <!-- <a href="#" class="themebtn1">DEACTIVATE THE ACCOUNT</a> -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,276 @@
+<div *ngIf="view" class="signUpOutter">
+    <span (click)="close()" class="iconclose">x</span>
+    <div *ngIf="view === 'signin'" class="login-modal modal fade " id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content col-md-12 nopadd">
+                <div class="modal-body col-md-12 nopadd">
+                    <form (ngSubmit)="onLogin(loginForm);" #loginForm="ngForm">
+                        <h4 class="login-title">Login</h4>
+                        <div class="col-md-12 login-modal-base">
+                            <div class="col-md-12  input-container-base nopadd">
+                                <div class="col-md-12input-container ">
+                                    <input type="email" email required class="input-control login-email" [(ngModel)]="userdetail.email" #email="ngModel" name="email" id="email" placeholder="Email Address">
+                                </div>
+                                <div *ngIf="email.touched && email.invalid" class="invalid-feedback">
+                                    <div *ngIf="email.errors.required">Email is required</div>
+                                    <div *ngIf="email.errors.email">Email must be a valid email address</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12  input-container-base nopadd">
+                                <div class="col-md-12input-container ">
+                                    <input type="password" required class="input-control login-password" [(ngModel)]="userdetail.password" #password="ngModel" name="password" id="password" placeholder="Password">
+                                </div>
+                                <div *ngIf="password.touched && password.invalid" class="invalid-feedback">
+                                    <div *ngIf="password.errors.required">Password is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12  input-container-base ">
+                                <div class="custom_check">
+                                    <label class="control control--checkbox"> 
+                                  <input type="checkbox" [(ngModel)]="userdetail.remember" #remember="ngModel" name="remember" >Remember me
+                                  <div class="control__indicator"></div>
+                                   </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12  input-container-base ">
+                                <div class="col-md-12  login-btn-container nopadd">
+                                    <button [disabled]="!loginForm.valid" (click)="registerstep2 = true" type="submit" [class.disabled]="!loginForm.valid" class="themebtn">LOGIN</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12  input-container-base  text-center">
+                                <div class="col-md-12  forgot-container nopadd">
+                                    <a class="cursor" (click)="view =  'forgetpassword'">Forgot Password?</a>
+                                </div>
+                            </div>
+                            <div class="col-md-12  input-container-base ">
+                                <div class="col-md-12  login-footer ">
+                                    <P>Don’t have an account?</P>
+                                    <a class="cursor" (click)="view =  'signup'" class="themebtn1">Create one</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                    <!-- <p class="errormessage">{{errormessage}}</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="view === 'signup'" class="login-modal modal fade " id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content col-md-12 nopadd">
+                <form (ngSubmit)="registerForm.form.valid && onRegister(registerForm)" #registerForm="ngForm" novalidate>
+                    <div class="modal-body col-md-12 nopadd">
+
+                        <div *ngIf="!registerstep2" class="col-md-12 login-modal-base">
+                            <h4 class="login-title">Register with your Email</h4>
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="text" required class="input-control" [(ngModel)]="registerdetail.name" #name="ngModel" name="name" id="name" placeholder="Name">
+
+                                </div>
+                                <div *ngIf="name.touched && name.invalid" class="invalid-feedback">
+                                    <div *ngIf="name.errors.required">Name is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="email" (focusout)="checkemailvalidation(registerdetail.email , email.valid )" email required class="input-control" [(ngModel)]="registerdetail.email" #email="ngModel" name="email" id="email" placeholder="Email Address">
+                                </div>
+                                <div *ngIf="emailvalidate" class="invalid-feedback">
+                                    <div>This Email ID is already exists </div>
+                                </div>
+                                <div *ngIf="email.touched && email.invalid" class="invalid-feedback">
+                                    <div *ngIf="email.errors.required">Email is required</div>
+                                    <div *ngIf="email.errors.email">Email must be a valid email address</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="password" required class="input-control" minlength="6" [(ngModel)]="registerdetail.password" #password="ngModel" name="password" id="password" placeholder="Password">
+                                </div>
+                                <div *ngIf="password.touched && password.invalid" class="invalid-feedback">
+                                    <div *ngIf="password.errors.required">Password is required</div>
+                                    <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="text" pattern="^[0-9-+()]*$" required class="input-control" [(ngModel)]="registerdetail.phone" #phone="ngModel" name="phone" id="phone" placeholder="Phone Number">
+                                </div>
+                                <div *ngIf="phone.touched && phone.invalid" class="invalid-feedback">
+                                    <div *ngIf="phone.errors.required">Phone Number is required</div>
+                                    <div *ngIf="phone.errors.pattern">Phone Number must be valid</div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base">
+                                <div class="custom_check agree-terms-login">
+                                    <label class="control control--checkbox">
+                                 <input type="checkbox" required [(ngModel)]="registerdetail.accept"  #accept="ngModel" name="accept" id="accept"  class=" ">
+                                  By signing up, I agree to CuServe’s <a href="#">Terms and Conditions, and Privacy Policy.</a> 																		<div class="control__indicator"></div>
+                                 </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base">
+                                <div class="col-md-12 login-btn-container nopadd">
+                                    <button [disabled]="!registerForm.valid && registerdetail.accept && emailvalidate" (click)="registerstep2 = true" type="button" [class.disabled]="!registerForm.valid" class="themebtn">REGISTER</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base ">
+                                <div class="col-md-12 login-footer ">
+                                    <P>Already have an account?</P>
+                                    <a (click)="view = 'signin'" class="themebtn1">LOGIN</a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div *ngIf="registerstep2" class="col-md-12 login-modal-base">
+                            <h4 class="login-title">
+                                <i class="mdi mdi-arrow-left" (click)="registerstep2 = false" style="  float: left; margin: 0 0 0 10px; "></i> Register: Final Step </h4>
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="text" class="input-control" [(ngModel)]="registerdetail.companyname" #companyname="ngModel" name="companyname" id="companyname" placeholder="Company Name">
+                                </div>
+                            </div>
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="email" email class="input-control" [(ngModel)]="registerdetail.companyemail" #companyemail="ngModel" name="companyemail" id="companyemail" placeholder="Company Email Address">
+                                </div>
+
+                                <div *ngIf="companyemail.touched && companyemail.invalid" class="invalid-feedback">
+                                    <div *ngIf="companyemail.errors.email">Email must be a valid email address</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="text" pattern="^[0-9-+()]*$" class="input-control" [(ngModel)]="registerdetail.companyphone" #companyphone="ngModel" name="companyphone" id="companyphone" placeholder="phone Number">
+                                </div>
+                                <div *ngIf="companyphone.touched && companyphone.invalid" class="invalid-feedback">
+                                    <div *ngIf="companyphone.errors.pattern">Phone Number must be valid</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <p-dropdown class="input-control" required [options]="categorylist" [(ngModel)]="registerdetail.category" #category="ngModel" name="category" id="category"></p-dropdown>
+
+                                </div>
+                                <div *ngIf="companyphone.touched && companyphone.invalid" class="invalid-feedback">
+                                    <div *ngIf="companyphone.errors.required">Category must be valid</div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <label class="formtit"> Company Logo</label>
+                                    <p-fileUpload name="companylogo[]" [url]="companylogoapi" (onUpload)="onUpload($event , 'companylogo')" mode="basic" auto="auto" accept="image/*"></p-fileUpload>
+
+                                    <input type="text" class="hide" hidden [(ngModel)]="registerdetail.companylogo" #companylogo="ngModel" name="companylogo" id="companylogo" required>
+                                    <div *ngIf="registerdetail.companylogo" class="buttonholder">
+                                        <button type="button" (click)="viewImage(registerdetail.companylogo)" class="btn">View</button>
+                                        <button type="button" (click)="removeImage(registerdetail.companylogo, 'companylogo' )" class="btn">Remove</button>
+                                    </div>
+                                    <div *ngIf="previewImage" class="imagePreview">
+                                        <h4>Preview</h4>
+                                        <img [src]="previewImage">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 input-container-base nopadd">
+                                <div class="col-md-12  input-container ">
+                                    <input type="text" class="input-control" [(ngModel)]="registerdetail.companyaddress1" #companyaddress1="ngModel" name="companyaddress1" id="companyaddress1" placeholder="Address Line 1">
+                                </div>
+                            </div>
+                            <div class="col-md-12  input-container-base nopadd">
+                                <div class="col-md-6 input-container ">
+                                    <input type="text" class="input-control" [(ngModel)]="registerdetail.companyaddress2" #companyaddress2="ngModel" name="companyaddress2" id="companyaddress2" placeholder="Address Line 2 (Optional)">
+
+                                </div>
+                                <div class="col-md-6 input-container">
+                                    <input type="text" class="input-control" [(ngModel)]="registerdetail.companycity" #companycity="ngModel" name="companycity" id="companycity" placeholder="City">
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12  input-container-base nopadd">
+                                <div class="col-md-6 input-container ">
+                                    <input type="text" class="input-control" [(ngModel)]="registerdetail.companystate" #companystate="ngModel" name="companystate" id="companystate" placeholder="State/province">
+                                </div>
+                                <div class="col-md-6 input-container">
+                                    <input type="text" class="input-control" [(ngModel)]="registerdetail.companycountry" #companycountry="ngModel" name="companycountry" id="companycountry" placeholder="Country">
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="col-md-12 input-container-base">
+                                <div class="col-md-12 login-btn-container nopadd">
+                                    <button [disabled]="!registerForm.valid && registerdetail.accept" type="submit" class="themebtn">REGISTER</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div *ngIf="view === 'forgetpassword'" class="login-modal modal fade " id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content col-md-12 nopadd">
+                <div class="modal-body col-md-12 nopadd">
+                    <form (ngSubmit)="onforgetpass(ForgetpassForm);" #ForgetpassForm="ngForm">
+                        <h4 class="login-title">RESET PASSWORD</h4>
+                        <div class="col-md-12 login-modal-base">
+                            <div class="col-md-12  input-container-base nopadd">
+                                <div class="col-md-12input-container ">
+                                    <input type="email" email required class="input-control login-email" [(ngModel)]="resetdetail.email" #email="ngModel" name="email" id="email" placeholder="Email Address">
+                                </div>
+                                <div class="invalid-feedback">{{errormessage}}</div>
+
+                                <div *ngIf="email.touched && email.invalid" class="invalid-feedback">
+                                    <div *ngIf="email.errors.required">Email is required</div>
+                                    <div *ngIf="email.errors.email">Email must be a valid email address</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12  input-container-base ">
+                                <div class="col-md-12  login-btn-container nopadd">
+                                    <button [disabled]="!ForgetpassForm.valid" type="submit" [class.disabled]="!ForgetpassForm.valid" class="themebtn">SUBMIT</button>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div *ngIf="view === 'emailverification'" class="login-modal modal fade " id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content col-md-12 nopadd">
+                <div class="modal-body col-md-12 nopadd">
+                    <p class="verificationtext">
+                        Verification link has been sent to your email account. Please verify to login
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

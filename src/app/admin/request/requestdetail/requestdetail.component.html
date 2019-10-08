@@ -1,0 +1,89 @@
+<div class="breadcrumb-base col-md-12 col-sm-12 col-lg-12 col-xs-12">
+    <ul class="breadcrumb">
+        <li><a routerLink="/admin/request">Request List</a></li>
+        <li><a> {{ivrDetail?.ivrname}}  </a></li>
+    </ul>
+</div>
+<ng-container *ngIf="ivrDetail">
+    <h2 class="main-title"> Request</h2>
+    <div class="col-md-12  company-details-base">
+        <div class="col-md-12  company-details-inner">
+            <h4 class="company-title">View created IVR
+                <a routerLink="/admin/editivr/{{ivrDetail._id}}/{{ivrDetail.createdby._id}}" class="edit-iocn"><img src="assets/images/ivr-icon.png"> <span>View created IVR</span></a>
+            </h4>
+            <div class="col-md-12   company-details-sections nopadd">
+                <input class="form-control" [disabled]="ivrDetail.status !== 'pending'" placeholder="SID Number" [(ngModel)]="ivrDetail.twilionumber" type="text">
+                <input class="form-control" [disabled]="ivrDetail.status !== 'pending'" placeholder="Assigned Number" [(ngModel)]="ivrDetail.assignednumber" type="text">
+
+                <ul *ngIf="ivrDetail.status === 'pending'" class="list-inline ivr-request-btn">
+                    <li><a [class.disabled]="!ivrDetail.twilionumber" (click)="statuschange(true)" class="themebtn">ACCEPT</a></li>
+                    <li><a (click)="statuschange(false)" class="themebtn1">DECLINE</a></li>
+                </ul>
+
+                <ul *ngIf="updatestatus" class="list-inline ivr-request-btn">
+
+                    <li>
+                        <a class="approvedtext" *ngIf="ivrDetail.status === 'approved'">
+                            <i class="mdi mdi-check"></i> APPROVED
+                        </a>
+                    </li>
+                    <li>
+                        <a *ngIf="ivrDetail.status === 'declined'">
+                            <i class="mdi mdi-close"></i> DECLINED</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-12  company-details-base">
+        <div class="col-md-12  company-details-inner">
+            <h4 class="company-title">Company Details
+                <a routerLink="/admin/users/account/{{ivrDetail.createdby._id}}" class="edit-iocn"><img src="assets/images/edit-icon.png"> <span>Edit</span></a>
+            </h4>
+            <div class="col-md-12   company-details-sections nopadd">
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>COMPANY NAME</h5>
+                    <p>{{ivrDetail.createdby.companyname}}</p>
+                </div>
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>Email Address</h5>
+                    <p>{{ivrDetail.createdby.companyemail}}</p>
+                </div>
+            </div>
+            <div class="col-md-12   company-details-sections nopadd">
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>Address</h5>
+                    <p> {{ivrDetail.createdby.companyaddress1}} , {{ivrDetail.createdby.companyaddress2}} <span *ngIf="ivrDetail.createdby.companyaddress2">,</span> {{ivrDetail.createdby.country}}</p>
+                </div>
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>Phone Number</h5>
+                    <p> {{ivrDetail.createdby.companyphone}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12  company-details-base">
+        <div class="col-md-12  company-details-inner">
+            <h4 class="company-title">Account Holder’s Details
+                <a routerLink="/admin/users/account/{{ivrDetail.createdby._id}}" class="edit-iocn"><img src="assets/images/edit-icon.png"> <span>Edit</span></a>
+            </h4>
+            <div class="col-md-12   company-details-sections nopadd">
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>NAME</h5>
+                    <p class="inputmodel">{{ivrDetail.createdby.name}}</p>
+                </div>
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>Email Address</h5>
+                    <p class="inputmodel">{{ivrDetail.createdby.email}}</p>
+                </div>
+            </div>
+            <div class="col-md-12   company-details-sections nopadd">
+                <div class="col-md-5  company-details-section-inner ">
+                    <h5>Phone Number</h5>
+                    <p class="inputmodel">{{ivrDetail.createdby.phone}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

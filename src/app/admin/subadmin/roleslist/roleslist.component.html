@@ -1,0 +1,97 @@
+<div class="breadcrumb-base col-md-12 col-sm-12 col-lg-12 col-xs-12">
+    <ul class="breadcrumb">
+        <li><a routerLink="/admin/subadmin">SubAdmin List</a></li>
+        <li><a> Roles List  </a></li>
+    </ul>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 billhist-base ivr-base nopadd">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 billhist-generatebill text-right nopadd">
+        <h2 class="main-title">Roles Lists</h2>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 searchbar-container nopadd">
+        <input style="margin: 0 0 30px 0" type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" class="searchbar" placeholder="Search">
+        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 billhist-generatebill text-right nopadd">
+            <a (click)="privilagevisible = true" class="themebtn1"><span class="plus-icon-bill">+</span>CREATE ROLES</a>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 billhist-generatebill text-right nopadd">
+
+            <div class="theme-table">
+
+                <p-table *ngIf="datasource" class="table table-striped" #dt [columns]="cols" [value]="datasource" [paginator]="true" [rows]="10" [totalRecords]="totalRecords">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td>{{rowData.rolename}}</td>
+
+                            <td>
+                                <p> <a [class.disabled]="rowData.rolename == 'Admin'" (click)="editprivilage(rowData)" class="custom-red">Edit Privilages</a></p>
+                            </td>
+
+                            <td>
+                                <p> <a [class.disabled]="rowData.rolename == 'Admin'" (click)="deletedprivilage(rowData._id)" class="custom-red">Delete Privilages</a></p>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="overlay" *ngIf="privilagevisible"></div>
+
+<p-dialog appendTo="body" [(visible)]="privilagevisible">
+    <p-header>
+        Privilage
+    </p-header>
+    <form (ngSubmit)="onSubmitprivilage(subadminsForm);" #subadminsForm="ngForm">
+        <div class="formgrop">
+            <label>Role Name</label>
+            <input type="text" class="form-control" [(ngModel)]="privilage.rolename" #rolename="ngModel" name="rolename">
+        </div>
+        <table class="privtable">
+            <thead>
+                <tr>
+                    <th>
+                        <label>Privilages</label>
+                    </th>
+                    <th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <p-checkbox name="privilages" value="View_Users_List" label="Users List" [(ngModel)]="privilage.privilages" #privilages="ngModel" name="privilages"></p-checkbox>
+                </tr>
+                <tr>
+                    <p-checkbox name="privilages" value="View_Billing_List" label="Billing List" [(ngModel)]="privilage.privilages" #privilages="ngModel" name="privilages"></p-checkbox>
+                </tr>
+                <tr>
+                    <p-checkbox name="privilages" value="View_Request_List" label="Request List" [(ngModel)]="privilage.privilages" #privilages="ngModel" name="privilages"></p-checkbox>
+                </tr>
+                <tr>
+                    <p-checkbox name="privilages" value="View_Android_List" label="Android List" [(ngModel)]="privilage.privilages" #privilages="ngModel" name="privilages"></p-checkbox>
+                </tr>
+                <tr>
+                    <p-checkbox name="privilages" value="View_subadmin_List" label="Create Subadmin" [(ngModel)]="privilage.privilages" #privilages="ngModel" name="privilages"></p-checkbox>
+                </tr>
+
+            </tbody>
+        </table>
+        <button class="btn themebtn btn-primary" type="submit">Submit</button>
+    </form>
+</p-dialog>

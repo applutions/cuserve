@@ -1,0 +1,241 @@
+<div class="ivrheader">
+    <span class="full btn " (click)="back()"><i class="mdi mdi-back"></i>Back</span>
+    <input type="text" [attr.autofocus]="ivrId != null" placeholder="Enter the IVR Name" [(ngModel)]="ivrname" #ivrnam="ngModel" class="form-control col-md-4" name="ivrnam" id="ivrnam" required />
+
+    <button [disabled]="!ivrname" (click)="submitivr(true , 'save')" class="full themebtn pull-right">Save IVR</button>
+    <button [disabled]="!ivrname" style="margin: 0 10px 0 0px;" (click)="submitivr(true , 'submit')" class="full themebtn pull-right">Submit for Approval</button>
+    <!-- <button (click)="viewjson = !viewjson" class="full themebtn pull-right">Copy JSON</button> -->
+</div>
+<!-- <pre>{{twilioTrigger|json}}</pre> ------------------------------ -->
+<!--  <pre>{{event|json}}</pre> -->
+
+<div [class.disabled]="!ivrname" class="chatcontent">
+    <p-organizationChart [value]="ivrData" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)">
+        <ng-template let-node pTemplate="trigger">
+            <div class="trigger">
+                <div class="node-header ui-corner-top">Trigger</div>
+                <div class="node-content">
+                    <div class="ivrbtn">Incoming Call</div>
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- <ng-template let-node pTemplate="person">
+            <div class="node-header ui-corner-top">{{node.label}} -{{node.data.options}}</div>
+            <div class="node-content">
+                <div>{{node.data.message}}</div>
+            </div>
+        </ng-template> -->
+        <ng-template let-node pTemplate="split">
+            <div class="gather_inputs">
+                <p *ngIf="node.nodeType && node.nodeType === 'timeout'">(No Input)</p>
+                <div class="node-header ui-corner-top">
+                    <i class="mdi mdi-phone"></i> {{node.label}}
+                    <span class="suboptionntext">(Split on condition)</span>
+                </div>
+                <div class="messagebody">
+                    <span class="datames">{{node.data.message}}</span>
+                    <div class="node-content">
+                        <div *ngFor="let i of node.data.condition" class="ivrbtn">{{i.val}}</div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template let-node pTemplate="gather_input">
+            <div class="gather_inputs">
+                <p *ngIf="node.nodeType && node.nodeType === 'timeout'">(No Input)</p>
+                <div class="node-header ui-corner-top">
+                    <i class="mdi mdi-phone"></i> {{node.label}}
+                    <div *ngIf="node.data.splitVal" class="ivrbtn" style="background: #3c763d;"> {{node.data.splitVal}} </div>
+                    <span class="suboptionntext">(Gather Input on Calls) </span>
+                </div>
+                <div class="messagebody">
+                    <span class="datames">{{node.data.message}}</span>
+                    <div class="node-content">
+                        <div class="ivrbtn">User Pressed keys</div>
+                        <div class="ivrbtn">No Input</div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template let-node pTemplate="connect_call">
+            <div class="gather_inputs">
+                <p *ngIf="node.nodeType && node.nodeType === 'timeout'">(No Input)</p>
+                <div class="node-header ui-corner-top">
+                    <i class="mdi mdi-phone"></i> {{node.label}}
+                    <div *ngIf="node.data.splitVal" class="ivrbtn" style="background: #3c763d;"> {{node.data.splitVal}} </div>
+                    <span class="suboptionntext">(connect call to)</span>
+                </div>
+                <div class="messagebody">
+                    <span class="datames">{{node.data.connectcallsto}}</span>
+                    <div class="node-content">
+                        <div class="ivrbtn">Connected call Ended</div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template let-node pTemplate="say_play">
+            <div class="gather_inputs">
+                <p *ngIf="node.nodeType && node.nodeType === 'timeout'">(No Input)</p>
+                <div class="node-header ui-corner-top">
+                    <i class="mdi mdi-phone"></i> {{node.label}}
+                    <div *ngIf="node.data.splitVal" class="ivrbtn" style="background: #3c763d;"> {{node.data.splitVal}} </div>
+                    <span class="suboptionntext">(Say the message)</span>
+                </div>
+                <div class="messagebody">
+                    <span class="datames">{{node.data.message}}</span>
+                    <div class="node-content">
+                        <div class="ivrbtn">Audio Completed</div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+    </p-organizationChart>
+</div>
+
+
+
+<div class="rightside">
+    <div class="slot">
+        <!-- split widget  -->
+        <form class="" *ngIf="optionlist.split" #ivrnodeform="ngForm">
+            <div class="brandform">
+                <div class="form-group bannerGroup  ">
+                    <label for=" ">WIDGET NAME:</label>
+                    <input type="text" [(ngModel)]="currentNode.label" value="split" #name="ngModel" class="form-control" name="name" id="name" required />
+                </div>
+
+                <label class="subnodetitle">Transitions:</label>
+
+                <div class="form-group bannerGroup tansition" *ngFor="let item of currentNode.data.condition; let id = index">
+                    <label>IF VALUE EQUAL_TO: </label>
+                    <!-- (input)="splitdulicatevalidation($event, item)"  [ngClass]="checkexixtingsplit(item.val)"-->
+                    <input required class="input-control mrd inputvalequal" type="number" name="condition-{{id}}" [(ngModel)]="item.val">
+                    <!-- [disabled]="currentNode.children.length>0"[ngClass]="checkexixtingsplit(item.val)" -->
+                    <p-dropdown [options]="widgetlist" [disabled]="item.widget" class="input-control" [(ngModel)]="item.widget" #widget="ngModel" #widget name="widget-{{id}}" id="widget-{{id}}" required>
+                    </p-dropdown>
+                    <!-- splitdulicate  *ngIf="id > 0"  [class.disabled]="!ivrnodeform.valid" -->
+                    <a (click)="ondeletesplit(item)" class="removetxt">Remove</a>
+                </div>
+                <p *ngIf="splitdulicate" class="text-error">Error: Duplicate value will not be allowed</p>
+                <!-- [disabled]="splitdulicate" -->
+                <button class="btn themebtn pull-right" (click)="onAdd(currentNode)">ADD NEW</button>
+
+            </div>
+            <div class="btnhold">
+                <!-- currentNode.children.length>0  || splitdulicate ||  -->
+                <button class="btn themebtn" [disabled]="!ivrnodeform.valid" (click)="onSplit()" type="submit">Submit</button>
+
+                <button (click)="onDelete()" class="btn themebtn" type="Button">Delete Nodes</button>
+            </div>
+        </form>
+        <!-- split widget  end-->
+
+        <!-- say play widget  -->
+        <form class="" *ngIf="optionlist.say_play" #ivrnodeform="ngForm">
+            <div class="brandform">
+                <div class="form-group bannerGroup  ">
+                    <label for="couponName">WIDGET NAME:</label>
+                    <input type="text" [(ngModel)]="currentNode.label" value="say_play" #name="ngModel" class="form-control" name="name" id="name" required />
+                </div>
+                <div class="form-group bannerGroup">
+                    <label>TEXT TO SAY:</label>
+                    <textarea [(ngModel)]="currentNode.data.message" #message="ngModel" class="form-control" name="message" id="message" (ngModelChange)="updateSay()" required></textarea>
+                </div>
+                <label class="subnodetitle">Transitions:</label>
+                <div class="form-group bannerGroup tansition">
+                    <label>AUDIO COMPLETED:</label>
+                    <p-dropdown [disabled]="currentNode.children.length>=1" [options]="widgetlist" class="input-control" [(ngModel)]="currentNode.data.audiocompleted" #audiocompleted="ngModel" #audiocompleted name="audiocompleted" id="audiocompleted" required></p-dropdown>
+                </div>
+            </div>
+            <button *ngIf="currentNode.children.length==0" [disabled]="!ivrnodeform.valid" class="btn themebtn" (click)="onPlay(ivrnodeform.value , audiocompleted.value)" type="submit">Submit</button>
+            <button class="btn themebtn" (click)="onDelete()" type="Button">Delete Node</button>
+        </form>
+        <!-- say play end  -->
+
+
+        <!-- connect cals to widget  -->
+        <form class="" *ngIf="optionlist.connect_call" #ivrnodeform="ngForm">
+
+            <div class="brandform">
+                <div class="form-group bannerGroup  ">
+                    <label for="couponName">WIDGET NAME:</label>
+                    <input type="text" [(ngModel)]="currentNode.label" value="gather_1" #name="ngModel" class="form-control" name="name" id="name" required />
+                </div>
+
+
+                <div class="form-group bannerGroup  ">
+                    <label for="couponName">CONNECT CALLS TO:</label>
+                    <input type="text" [(ngModel)]="currentNode.data.connectcallsto" #connectcallsto="ngModel" class="form-control" name="connectcallsto" (ngModelChange)="updateCallNumber()" id="connectcallsto" required />
+                </div>
+                <label class="subnodetitle">Transitions:</label>
+                <div class="form-group bannerGroup tansition">
+                    <label>CONNECTED CALLS ENDED:</label>
+                    <p-dropdown [disabled]="currentNode.children.length>=1" [options]="widgetlist" class="input-control" [(ngModel)]="currentNode.connectcallsend" #connectcallsend="ngModel" #connectcallsend name="connectcallsend" id="connectcallsend" required></p-dropdown>
+
+                </div>
+            </div>
+            <button *ngIf="currentNode.children.length==0" [disabled]="!ivrnodeform.valid" class="btn themebtn" (click)="onConnectCalls(connectcallsend.value)" type="submit">Submit</button>
+            <button (click)="onDelete()" class="btn themebtn" type="Button">Delete Node</button>
+        </form>
+        <!-- connect cals to widget  end -->
+
+        <!-- trigger widget -->
+        <form class="" *ngIf="optionlist.trigger" #ivrnodeform="ngForm">
+
+            <div ngModelGroup="transitions" class="brandform">
+                <label class="subnodetitle">Transitions:</label>
+                <div class="form-group bannerGroup tansition">
+                    <label>INCOMING CALL:</label>
+                    <p-dropdown [options]="widgetlist" class="input-control" [(ngModel)]="triggerwidget.incomingCall" #incomingcallwidget="ngModel" name="incomingcallwidget" id="incomingcallwidget" filter="true"></p-dropdown>
+                </div>
+
+            </div>
+            <button [disabled]="currentNode.data.incomingCall!=''" [disabled]="!ivrnodeform.valid" class="btn themebtn" (click)="onTriggerWidget()" type="submit">Submit</button>
+            <!-- <button class="btn themebtn" type="Button">Delete Node</button> -->
+        </form>
+        <!-- trigger widget end  -->
+
+        <form class="" *ngIf="optionlist.gather_input" #ivrnodeform="ngForm">
+            <div class="brandform">
+                <div class="form-group bannerGroup  ">
+                    <label for="couponName">WIDGET NAME:</label>
+                    <input type="text" [(ngModel)]="currentNode.label" value="gather_1" #name="ngModel" class="form-control" name="name" id="name" required />
+                </div>
+                <div class="form-group bannerGroup">
+                    <label>TEXT TO SAY:</label>
+                    <textarea [(ngModel)]="currentNode.data.message" #message="ngModel" class="form-control" name="message" id="message" (ngModelChange)="updateMessage()" required></textarea>
+                </div>
+
+                <div class="form-group bannerGroup  ">
+                    <label for="couponName">STOP GATHERING AFTER:(in seconds):</label>
+                    <input type="number" value="5" [(ngModel)]="currentNode.data.stopgatheringsecond" #stopgatheringsecond="ngModel" class="form-control" name="stopgatheringsecond" id="stopgatheringsecond" required />
+                </div>
+
+                <div class="form-group bannerGroup  ">
+                    <label for="couponName">STOP GATHERING ON KEYPRESS?:</label>
+                    <input type="text" [(ngModel)]="currentNode.data.stopgatheringkeypress" value="#" #stopgatheringkeypress="ngModel" class="form-control" name="stopgatheringkeypress" id="stopgatheringkeypress" required />
+                </div>
+                <label class="subnodetitle">Transitions:</label>
+                <div class="form-group bannerGroup tansition">
+                    <label>IF USER PRESSED KEYS:</label>
+                    <p-dropdown required [disabled]="currentNode.data.keypress!=null" [options]="gatherwidgetlist" class="input-control" [(ngModel)]="gatherinputwidget.keypress" #keypress="ngModel" #keypress name="keypress" id="keypress"></p-dropdown>
+
+                </div>
+                <div class="form-group bannerGroup tansition">
+                    <label>NO INPUT:</label>
+                    <p-dropdown required [disabled]="currentNode.data.timeout!=null" [options]="widgetlist" class="input-control" [(ngModel)]="gatherinputwidget.timeout" #timeout="ngModel" #timeout name="timeout" id="timeout">
+                    </p-dropdown>
+
+                </div>
+            </div>
+            <button [disabled]="currentNode.data.keypress!=null || currentNode.data.timeout!=null" [disabled]="!ivrnodeform.valid" class="btn themebtn" (click)="onGatherInput()" type="submit">Submit</button>
+            <button class="btn themebtn" (click)="onDelete()" type="Button">Delete Node</button>
+        </form>
+
+
+
+    </div>
+</div>
